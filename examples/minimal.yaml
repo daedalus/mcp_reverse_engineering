@@ -1,0 +1,27 @@
+# Minimal config: Only basic file analysis tools
+# Use this for quick file inspection without LLM context overhead
+
+settings:
+  default_timeout: 120
+  sandbox_enabled: true
+  log_level: INFO
+
+categories:
+  file_analysis:
+    enabled: true
+    tools:
+      - file
+      - strings
+      - hexdump
+
+  binary_analysis:
+    enabled: false
+    tools: []
+
+  firmware_analysis:
+    enabled: false
+    tools: []
+
+  network:
+    enabled: false
+    tools: []

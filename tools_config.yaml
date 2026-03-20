@@ -1,0 +1,64 @@
+# MCP Reverse Engineering Tool Configuration
+# This file controls which tools are loaded, allowing selective activation
+# to avoid overwhelming LLM context windows.
+
+# Global settings
+settings:
+  # Default timeout for tool execution (seconds)
+  default_timeout: 300
+  # Enable sandboxed execution
+  sandbox_enabled: true
+  # Logging level: DEBUG, INFO, WARNING, ERROR
+  log_level: INFO
+
+# Tool categories - set 'enabled: true' to activate all tools in category
+categories:
+  file_analysis:
+    enabled: false
+    tools:
+      - file
+      - strings
+      - hexdump
+      - xxd
+
+  binary_analysis:
+    enabled: false
+    tools:
+      - objdump
+      - readelf
+      - ldd
+      - strace
+      - ltrace
+      - upx
+      - gdb
+      - radare2
+      - angr
+      - ghidra
+      - frida
+
+  firmware_analysis:
+    enabled: false
+    tools:
+      - binwalk
+      - unsquashfs
+      - sasquatch
+      - jefferson
+      - ubi_reader
+      - unpackers
+      - retdc
+      - qemu
+
+  network:
+    enabled: false
+    tools:
+      - curl
+      - wget
+
+# Individual tool overrides (optional - takes precedence over category settings)
+tools:
+  # Example: Override specific tools
+  # objdump:
+  #   enabled: true
+  #   timeout: 600
+  #   args:
+  #     default_args: ["-d", "-M", "intel"]

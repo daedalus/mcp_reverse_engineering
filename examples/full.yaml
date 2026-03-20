@@ -1,0 +1,49 @@
+# Full config: Enable all available tools
+# Use this when you need the complete toolset
+
+settings:
+  default_timeout: 300
+  sandbox_enabled: true
+  log_level: INFO
+
+categories:
+  file_analysis:
+    enabled: true
+    tools:
+      - file
+      - strings
+      - hexdump
+      - xxd
+
+  binary_analysis:
+    enabled: true
+    tools:
+      - objdump
+      - readelf
+      - ldd
+      - strace
+      - ltrace
+      - upx
+      - gdb
+      - radare2
+      - angr
+      - ghidra
+      - frida
+
+  firmware_analysis:
+    enabled: true
+    tools:
+      - binwalk
+      - unsquashfs
+      - sasquatch
+      - jefferson
+      - ubi_reader
+      - unpackers
+      - retdc
+      - qemu
+
+  network:
+    enabled: true
+    tools:
+      - curl
+      - wget

@@ -1,0 +1,59 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mcp-reverse-engineering"
+version = "0.1.0"
+description = "A sandboxed MCP tool for reverse engineering with multiple tool integrations"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [
+    {name = "Reverse Engineering Assistant", email = "assistant@example.com"}
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+dependencies = [
+    "psutil>=5.9.0",
+    "pyyaml>=6.0",
+    "requests>=2.28.0",
+]
+requires-python = ">=3.9"
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "black>=23.0.0",
+    "ruff>=0.1.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/example/mcp-reverse-engineering"
+Repository = "https://github.com/example/mcp-reverse-engineering"
+Documentation = "https://github.com/example/mcp-reverse-engineering#readme"
+[project.scripts]
+mcp-re = "mcp_reverse_engineering.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "."}
+packages = ["mcp_reverse_engineering", "mcp_reverse_engineering.core", "mcp_reverse_engineering.tools", "mcp_reverse_engineering.sandbox", "mcp_reverse_engineering.utils", "mcp_reverse_engineering.knowledge_base"]
+
+[tool.setuptools.package-data]
+"mcp_reverse_engineering" = ["py.typed", "*.yaml"]
+"mcp_reverse_engineering.examples" = ["*.yaml"]
+
+[tool.black]
+line-length = 88
+target-version = ["py39", "py310", "py311", "py312"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py39"

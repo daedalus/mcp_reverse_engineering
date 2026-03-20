@@ -1,0 +1,34 @@
+# Firmware analysis config: Tools for reverse engineering firmware
+# Includes binary analysis + firmware extraction tools
+
+settings:
+  default_timeout: 600
+  sandbox_enabled: true
+  log_level: INFO
+
+categories:
+  file_analysis:
+    enabled: true
+    tools:
+      - file
+      - strings
+      - hexdump
+      - xxd
+
+  binary_analysis:
+    enabled: true
+    tools:
+      - objdump
+      - readelf
+      - ldd
+
+  firmware_analysis:
+    enabled: true
+    tools:
+      - binwalk
+      - unsquashfs
+      - sasquatch
+
+  network:
+    enabled: false
+    tools: []
