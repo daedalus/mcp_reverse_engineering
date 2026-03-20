@@ -1,4 +1,4 @@
-# MCP Reverse Engineering Tool
+# Reverse Engineering Tools MCP Server
 
 A sandboxed MCP (Managed Computation Platform) tool for reverse engineering that provides a unified interface to various reverse engineering tools with security restrictions.
 
