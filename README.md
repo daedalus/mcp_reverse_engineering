@@ -1,5 +1,7 @@
 # Reverse Engineering Tools MCP Server
 
+mcp-name: io.github.daedalus/mcp_reverse_engineering
+
 A sandboxed MCP (Managed Computation Platform) tool for reverse engineering that provides a unified interface to various reverse engineering tools with security restrictions.
 
 ## Features
