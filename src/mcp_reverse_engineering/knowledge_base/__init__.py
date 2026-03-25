@@ -1,0 +1,1 @@
+"""Knowledge base module for MCP Reverse Engineering Tool."""

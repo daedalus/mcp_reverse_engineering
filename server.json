@@ -1,0 +1,22 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.daedalus/mcp_reverse_engineering",
+  "description": "A sandboxed MCP tool for reverse engineering with multiple tool integrations",
+  "repository": {
+    "url": "https://github.com/daedalus/mcp_reverse_engineering",
+    "source": "github"
+  },
+  "version": "0.1.0.1",
+  "packages": [
+    {
+      "registryType": "pypi",
+      "identifier": "mcp_reverse_engineering",
+      "version": "0.1.0.1",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+      ]
+    }
+  ]
+}

@@ -2,7 +2,6 @@
 
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any
 
 import yaml
 
@@ -43,9 +42,9 @@ class ToolConfig:
 def load_config(config_path: str | Path | None = None) -> ToolConfig:
     if config_path is None:
         config_path = Path(__file__).parent.parent / "tools_config.yaml"
-    
+
     config_path = Path(config_path)
-    
+
     if not config_path.exists():
         return _default_config()
 
@@ -65,18 +64,20 @@ def load_config(config_path: str | Path | None = None) -> ToolConfig:
         log_level=global_settings.get("log_level", "INFO"),
     )
 
-    enabled_tools = set()
+    enabled_tools: set[str] = set()
 
     for category_name, category_data in categories_data.items():
         if not category_data.get("enabled", False):
             continue
-        
+
         category_tools = category_data.get("tools", [])
-        config.categories.append(CategoryConfig(
-            name=category_name,
-            enabled=True,
-            tools=category_tools,
-        ))
+        config.categories.append(
+            CategoryConfig(
+                name=category_name,
+                enabled=True,
+                tools=category_tools,
+            )
+        )
         enabled_tools.update(category_tools)
 
     for tool_name, tool_override in (tools_overrides or {}).items():
