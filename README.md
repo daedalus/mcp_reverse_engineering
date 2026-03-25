@@ -31,8 +31,40 @@ A sandboxed MCP (Managed Computation Platform) tool for reverse engineering that
 
 ## Installation
 
+### Local Installation
+
 ```bash
 pip install -e .
+```
+
+### Docker
+
+Build and run with Docker:
+
+```bash
+# Build the image
+docker build -t mcp-reverse-engineering .
+
+# Run with docker-compose
+docker-compose up -d
+
+# Or run directly with volume mount
+docker run -v $(pwd)/workspace:/workspace mcp-reverse-engineering --tool strings --args "-n 10" --file ./binary.exe
+```
+
+The container runs with security hardening:
+- Read-only filesystem
+- No new privileges
+- Dropped capabilities
+- Tmpfs for temporary files
+
+### Remote Access via SSE
+
+For remote MCP access, the container can be configured to serve over HTTP/SSE:
+
+```bash
+# With custom port mapping
+docker-compose up -d
 ```
 
 ## Configuration

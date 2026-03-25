@@ -14,6 +14,7 @@ A sandboxed MCP (Managed Computation Platform) tool for reverse engineering that
 - MCP-compatible tool schemas for integration
 - CLI interface for direct tool execution
 - Comprehensive documentation for all tools
+- Docker container support for remote deployment and execution
 
 ### What is NOT in scope
 - Actual installation of external RE tools (binwalk, radare2, etc.)

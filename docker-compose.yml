@@ -1,0 +1,21 @@
+services:
+  mcp-re:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mcp-reverse-engineering
+    environment:
+      - MCP_RE_WORKSPACE=/workspace
+      - MCP_RE_TIMEOUT=30
+    volumes:
+      - ./workspace:/workspace
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64m
