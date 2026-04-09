@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "mcp-reverse-engineering"
-version = "0.1.0"
+version = "0.1.1"
 description = "A sandboxed MCP tool for reverse engineering with multiple tool integrations"
 readme = "README.md"
 requires-python = ">=3.11"
