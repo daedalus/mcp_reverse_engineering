@@ -41,10 +41,20 @@ class ToolConfig:
 
 def load_config(config_path: str | Path | None = None) -> ToolConfig:
     if config_path is None:
-        # Check project root (four levels up from core/config.py: core -> package -> src -> project)
-        project_root = Path(__file__).parent.parent.parent.parent
-        config_path = project_root / "tools_config.yaml"
-        if not config_path.exists():
+        # Check multiple locations for tools_config.yaml
+        # Priority: CWD, home directory, package location
+        package_location = Path(__file__).resolve().parent.parent.parent
+        search_paths = [
+            Path.cwd() / "tools_config.yaml",
+            Path.home() / ".mcp-re" / "tools_config.yaml",
+            package_location / "tools_config.yaml",
+        ]
+
+        for candidate in search_paths:
+            if candidate.exists():
+                config_path = candidate
+                break
+        else:
             return _default_config()
 
     config_path = Path(config_path)

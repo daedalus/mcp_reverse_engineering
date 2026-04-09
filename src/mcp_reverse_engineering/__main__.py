@@ -5,21 +5,13 @@ reverse engineering tool. It is invoked when running the package as
 a CLI application.
 """
 
+from mcp_reverse_engineering.server import mcp
 
-from mcp_reverse_engineering.cli import main
 
-
-def cli_main() -> int:
-    """Entry point for the CLI.
-
-    Returns:
-        int: Exit code (0 for success, non-zero for failure).
-
-    Example:
-        >>> sys.exit(cli_main())
-    """
-    return main()
+def main() -> None:
+    """Entry point for the MCP server."""
+    mcp.run()
 
 
 if __name__ == "__main__":
-    raise SystemExit(cli_main())
+    main()

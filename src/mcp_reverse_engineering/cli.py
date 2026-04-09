@@ -12,7 +12,7 @@ import sys
 from mcp_reverse_engineering.core.engine import ReverseEngineeringEngine
 
 
-def main() -> int:
+def cli_main() -> int:
     """Main entry point for the CLI.
 
     Parses command-line arguments and executes the specified tool
@@ -79,6 +79,14 @@ Examples:
     except Exception as e:
         print(f"Error: {e}", file=sys.stderr)
         return 1
+
+
+def main() -> int:
+    """Entry point for the MCP server (runs in stdio mode)."""
+    from mcp_reverse_engineering.server import mcp
+
+    mcp.run(transport="stdio")
+    return 0
 
 
 if __name__ == "__main__":
