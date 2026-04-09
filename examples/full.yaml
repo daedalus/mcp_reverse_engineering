@@ -29,6 +29,7 @@ categories:
       - angr
       - ghidra
       - frida
+      - fq
 
   firmware_analysis:
     enabled: true

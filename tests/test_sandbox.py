@@ -1,12 +1,11 @@
 """Tests for the sandboxed execution module."""
 
-import unittest
-import tempfile
-import os
-from pathlib import Path
-
 # Add the package to the path so we can import it
 import sys
+import tempfile
+import unittest
+from pathlib import Path
+
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from mcp_reverse_engineering.sandbox.execution import SandboxedExecutor
@@ -24,6 +23,7 @@ class TestSandboxedExecutor(unittest.TestCase):
         """Tear down test fixtures."""
         # Clean up workspace
         import shutil
+
         shutil.rmtree(self.workspace)
 
     def test_basic_execution(self):
@@ -36,7 +36,7 @@ class TestSandboxedExecutor(unittest.TestCase):
         # Create a file in workspace
         test_file = Path(self.workspace) / "test.txt"
         test_file.write_text("test content")
-        
+
         # Try to read it using cat
         result = self.executor.execute(["cat", "test.txt"])
         self.assertEqual(result.strip(), "test content")
@@ -46,7 +46,7 @@ class TestSandboxedExecutor(unittest.TestCase):
         # This should work (normal command)
         result = self.executor.execute(["ls", "-la"])
         self.assertIsInstance(result, str)
-        
+
         # Test with suspicious path (should warn but still allow for system commands)
         result = self.executor.execute(["ls", "/bin"])
         self.assertIsInstance(result, str)
@@ -56,6 +56,7 @@ class TestSandboxedExecutor(unittest.TestCase):
         # This command should timeout (sleep longer than timeout)
         result = self.executor.execute(["sleep", "10"])
         self.assertIn("timed out", result.lower())
+
 
 if __name__ == "__main__":
     unittest.main()

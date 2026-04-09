@@ -1,120 +1,150 @@
-# Reverse Engineering Tools MCP Server
+# mcp-reverse-engineering
 
-A sandboxed MCP (Managed Computation Platform) tool for reverse engineering that provides a unified interface to various reverse engineering tools with security restrictions.
+A sandboxed MCP (Model Context Protocol) tool for reverse engineering that provides a unified interface to various reverse engineering tools with security restrictions.
 
-## Features
+[![PyPI](https://img.shields.io/pypi/v/mcp-reverse-engineering.svg)](https://pypi.org/project/mcp-reverse-engineering/)
+[![Python](https://img.shields.io/pypi/pyversions/mcp-reverse-engineering.svg)](https://pypi.org/project/mcp-reverse-engineering/)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
-- **Sandboxed Execution**: All tools run in a restricted environment with timeouts, memory limits, and filesystem jail
-- **Unified Interface**: Single interface to access multiple reverse engineering tools
-- **Configurable Tool Loading**: Select which tools to enable via YAML configuration to avoid overwhelming LLM context windows
-- **Tool Categories**:
-  - File Analysis: `file`, `strings`, `hexdump`, `xxd`
-  - Binary Analysis: `objdump`, `readelf`, `ldd`, `strace`, `ltrace`, `upx`, `gdb`, `radare2`, `angr`, `ghidra`, `frida`
-  - Firmware Analysis: `binwalk`, `unsquashfs`, `sasquatch`, `jefferson`, `ubi_reader`, `unpackers`, `retdc`, `qemu`
-  - Network Tools: `curl`, `wget`
-- **Advanced Capabilities**:
-  - Radare2 AST queries
-  - Angry symbolic execution
-  - Ghidra headless decompilation
-  - Automatic unpacker detection
-  - Firmware filesystem detection
-  - Auto QEMU emulation
-- **Safety Features**:
-  - Argument validation
-  - Execution sandbox with resource limits
-  - File workspace jail
-  - Tool output truncation
-- **Knowledge Base**: Built-in documentation for all tools
-- **Testing**: Unit and functional tests included
+## Purpose
 
-## Installation
+This project provides a secure, sandboxed environment for executing reverse engineering tools via CLI or MCP protocol. It wraps common reverse engineering utilities (strings, objdump, readelf, binwalk, etc.) with safety features like filesystem isolation, timeouts, and argument validation.
+
+## Install
 
 ```bash
-pip install -e .
+pip install mcp-reverse-engineering
 ```
 
-## Configuration
+Or for development:
 
-Tools are configured via YAML files to control which tools are loaded. This prevents overwhelming LLM context windows by enabling only the tools you need.
+```bash
+pip install -e ".[dev]"
+```
 
-**Default config** (`tools_config.yaml`): All tools disabled
+### MCP Server Installation
 
-**Example configs**:
-- `examples/minimal.yaml` - Only file analysis tools (3 tools)
-- `examples/firmware.yaml` - File + Binary + Firmware analysis
-- `examples/full.yaml` - All 25 tools enabled
+To use as an MCP server with Claude Desktop:
 
-```yaml
-# Enable specific tool categories
-settings:
-  default_timeout: 300
-
-categories:
-  file_analysis:
-    enabled: true
-    tools:
-      - file
-      - strings
-      - hexdump
+```bash
+mcp install src/mcp_reverse_engineering/server.py
 ```
 
 ## Usage
 
-```bash
-# Using the CLI with default config
-mcp-re --tool strings --args "-n 10" --file ./binary.exe
+### CLI
 
-# Using a specific config
-mcp-re --config examples/minimal.yaml --tool strings --args [] --file ./binary.exe
+```bash
+# Extract strings from a binary
+mcp-re --tool strings --file /path/to/binary
+
+# Disassemble a binary
+mcp-re --tool objdump --args "['-d']" --file /path/to/binary
+
+# Analyze ELF headers
+mcp-re --tool readelf --args "['-h', '-s']" --file /path/to/elf
+
+# Run binwalk for firmware analysis
+mcp-re --tool binwalk --file /path/to/firmware.bin
 ```
 
-**Programmatic usage:**
+### Python API
+
 ```python
-from mcp_reverse_engineering.core.engine import ReverseEngineeringEngine
+from mcp_reverse_engineering import ReverseEngineeringEngine
 
-# Load with default config (no tools enabled)
-engine = ReverseEngineeringEngine()
+# Create engine with default config
+engine = ReverseEngineeringEngine(
+    workspace="./workspace",
+    timeout=30,
+)
 
-# Load with specific config
-engine = ReverseEngineeringEngine(config_path="examples/minimal.yaml")
-
-# List enabled tools
+# List available tools
 print(engine.list_available_tools())
 
-# Get MCP-compatible tool schemas
-print(engine.get_mcp_tools())
-
 # Execute a tool
-result = engine.execute_tool("strings", ["-n", "10"], "./binary.exe")
+result = engine.execute_tool("strings", ["-n", "8"], "/path/to/binary")
 print(result)
 ```
 
-## Available Tools
+### MCP Server
 
-Run `mcp-re --tool help` to see all available tools, or check the knowledge base in the source code.
+```python
+from mcp_reverse_engineering.server import mcp, strings, objdump, readelf, binwalk
 
-## Security
+# Run the server (stdio transport for Claude Desktop)
+if __name__ == "__main__":
+    mcp.run()
+```
 
-The tool employs multiple layers of security:
-1. Filesystem jail - all operations confined to workspace directory
-2. Process resource limits - CPU, memory, process count, file size restrictions
-3. Timeout enforcement - prevents hanging operations
-4. Argument validation - basic sanitization of inputs
-5. Output truncation - prevents excessive data exposure
+## API
 
-## Testing
+### ReverseEngineeringEngine
 
-Run the test suite:
+Main class for executing reverse engineering tools.
+
+```python
+engine = ReverseEngineeringEngine(
+    workspace: str = "./workspace",  # Sandbox directory
+    timeout: int = 30,               # Tool execution timeout
+    config_path: str | Path | None = None,  # YAML config path
+)
+```
+
+**Methods:**
+
+- `execute_tool(tool_name: str, args: List[str], file_path: Optional[str] = None) -> str` - Execute a tool
+- `list_available_tools() -> List[str]` - List enabled tools
+- `get_tool_documentation(tool_name: str) -> Dict[str, Any]` - Get tool docs
+- `get_mcp_tools() -> List[Dict[str, Any]]` - Get MCP tool schemas
+
+### Available Tools
+
+| Tool | Category | Description |
+|------|----------|-------------|
+| file | file_tools | Determine file type |
+| strings | file_tools | Extract printable strings |
+| hexdump | file_tools | Hexadecimal dump |
+| xxd | file_tools | Hexadecimal dump |
+| objdump | binary_tools | Disassemble binary |
+| readelf | binary_tools | Read ELF headers |
+| binwalk | firmware_tools | Firmware analysis |
+
+## Development
 
 ```bash
-python -m unittest discover tests
+# Clone the repository
+git clone https://github.com/daedalus/mcp_reverse_engineering.git
+cd mcp_reverse_engineering
+
+# Install dependencies
+pip install -e ".[test]"
+
+# Run tests
+pytest
+
+# Format code
+ruff format src/ tests/
+
+# Lint
+ruff check src/ tests/
+
+# Type check
+mypy src/
+
+# Install pre-commit hooks
+pip install pre-commit
+pre-commit install
 ```
+
+## MCP Server Configuration
+
+mcp-name: "io.github.daedalus/mcp-reverse-engineering"
 
 ## Requirements
 
-See `requirements.txt` for Python dependencies.
-
-Note: The actual reverse engineering tools (binwalk, radare2, etc.) must be installed separately on the system.
+- Python 3.11+
+- External tools: binwalk, radare2, ghidra, etc. (must be installed separately)
 
 ## License
 
