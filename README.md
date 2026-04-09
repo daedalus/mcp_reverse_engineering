@@ -139,7 +139,7 @@ pre-commit install
 
 ## MCP Server Configuration
 
-mcp-name: "io.github.daedalus/mcp-reverse-engineering"
+mcp-name: io.github.daedalus/mcp-reverse-engineering
 
 ## Requirements
 
