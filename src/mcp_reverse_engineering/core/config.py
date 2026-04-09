@@ -41,7 +41,11 @@ class ToolConfig:
 
 def load_config(config_path: str | Path | None = None) -> ToolConfig:
     if config_path is None:
-        config_path = Path(__file__).parent.parent / "tools_config.yaml"
+        # Check project root (four levels up from core/config.py: core -> package -> src -> project)
+        project_root = Path(__file__).parent.parent.parent.parent
+        config_path = project_root / "tools_config.yaml"
+        if not config_path.exists():
+            return _default_config()
 
     config_path = Path(config_path)
 

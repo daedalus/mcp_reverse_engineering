@@ -14,7 +14,7 @@ settings:
 # Tool categories - set 'enabled: true' to activate all tools in category
 categories:
   file_analysis:
-    enabled: false
+    enabled: true
     tools:
       - file
       - strings
